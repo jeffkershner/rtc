@@ -1,0 +1,58 @@
+# Dependencies
+**/node_modules
+**/.pnp
+**/.pnp.js
+
+# PostgreSQL
+services/postgres/data/
+!services/postgres/init/.gitkeep
+!services/postgres/conf/.gitkeep
+
+# Next.js
+**/.next/
+**/out/
+**/build
+
+# Testing
+**/coverage
+**/.nyc_output
+
+# Environment Variables
+**/.env
+**/.env.*
+!**/.env.example
+
+# Debug logs
+**/npm-debug.log*
+**/yarn-debug.log*
+**/yarn-error.log*
+
+# IDEs and editors
+**/.idea
+**/.vscode
+**/*.swp
+**/*.swo
+**/.DS_Store
+**/Thumbs.db
+
+# Docker
+**/.docker
+**/docker-compose.override.yml
+
+# Temporary files
+**/*.log
+**/.tmp
+**/tmp
+**/*.tmp
+
+# Build outputs
+**/dist
+**/build
+**/.cache
+
+# Misc
+**/*.pem
+**/.vercel
+**/.local
+**/*.log
+**/tsconfig.tsbuildinfo
