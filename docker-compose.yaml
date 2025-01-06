@@ -9,17 +9,18 @@ services:
       - /app/.next  
     environment:
       - NODE_ENV=development
-    ports:
-      - "3000:3000"
+
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000"]
       interval: 10s
       timeout: 5s
       retries: 3
       start_period: 30s
-    depends_on:
-      rtc-postgres:
-        condition: service_healthy
+    # depends_on:
+    #   rtc-postgres:
+    #     condition: service_healthy
+    networks:
+      - app_network        
 
   rtc-nginx:
     build:
@@ -28,29 +29,38 @@ services:
     ports:
       - "80:80"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:80"]
+      test: ["CMD", "curl", "-f", "http://localhost"]
       interval: 10s
       timeout: 5s
       retries: 3
       start_period: 10s
     depends_on:
       - rtc-frontend
+    networks:
+      - app_network      
 
-  rtc-postgres:
-    image: postgres:16-alpine
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: rtc_db
-    ports:
-      - "5432:5432"
-    volumes:
-      - ./services/postgres/data:/var/lib/postgresql/data
-      - ./services/postgres/init:/docker-entrypoint-initdb.d
-      - ./services/postgres/conf:/etc/postgresql/conf.d
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-      start_period: 10s
+  # rtc-postgres:
+  #   image: postgres:16-alpine
+  #   environment:
+  #     POSTGRES_USER: postgres
+  #     POSTGRES_PASSWORD: postgres
+  #     POSTGRES_DB: rtc_db
+  #   ports:
+  #     - "5432:5432"
+  #   volumes:
+  #     - ./services/postgres/data:/var/lib/postgresql/data
+  #     - ./services/postgres/init:/docker-entrypoint-initdb.d
+  #     - ./services/postgres/conf:/etc/postgresql/conf.d
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "pg_isready -U postgres"]
+  #     interval: 5s
+  #     timeout: 5s
+  #     retries: 5
+  #     start_period: 10s
+
+networks:
+  app_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
